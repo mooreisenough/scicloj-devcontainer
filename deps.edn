@@ -13,7 +13,10 @@
         clj-python/libpython-clj {:mvn/version "2.025"}
         scicloj/clojisr {:mvn/version "1.0.0"}
         org.scicloj/tempfiles {:mvn/version "1-beta1"}
-        kixi/stats {:mvn/version "0.5.5"}}
+        kixi/stats {:mvn/version "0.5.5"}
+        io.github.nextjournal/clerk {:mvn/version "0.16.1016"}
+        io.github.nextjournal/markdown {:git/sha "6683c48dfdb23404a23057817b6ac3acf0310bca"}
+        ch.qos.logback/logback-classic {:mvn/version "1.5.6"}}
  :aliases
  {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.3"}
                  slipset/deps-deploy {:mvn/version "0.2.2"}}
@@ -24,4 +27,17 @@
                        {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
           :main-opts ["-m" "cognitect.test-runner"]
           :exec-fn cognitect.test-runner.api/test}
-         }}
+  :dev {;; for disabling the official compiler
+         :classpath-overrides {org.clojure/clojure nil}
+         :extra-deps {com.github.flow-storm/clojure {:mvn/version "RELEASE"}
+                      com.github.flow-storm/flow-storm-dbg {:mvn/version "RELEASE"}
+                      nrepl/nrepl {:mvn/version "1.1.1"}
+                      cider/cider-nrepl {:mvn/version "0.47.1"}
+                      refactor-nrepl/refactor-nrepl {:mvn/version "3.10.0"}}
+         :jvm-opts ["-Dclojure.storm.instrumentEnable=true"
+                    "-Dclojure.storm.instrumentOnlyPrefixes=mooreisenough."]
+         :main-opts ["-m" "nrepl.cmdline"
+             "-b" "0.0.0.0"
+             "-p" "12345"
+             "--middleware" "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}}
+}

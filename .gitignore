@@ -4,3 +4,7 @@ classes/
 .lsp/
 .calva
 .nrepl-port
+.clerk/
+.Trash*/
+.venv/
+
