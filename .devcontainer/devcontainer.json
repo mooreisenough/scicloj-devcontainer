@@ -1,42 +1,62 @@
 {
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "containerUser": "vscode",
   "features": {
-    "ghcr.io/devcontainers/features/java:1": {
-      "version": "17"
+    "ghcr.io/devcontainers-contrib/features/leiningen-sdkman:2": {
+      "version": "latest",
+      "jdkVersion": "22",
+      "jdkDistro": "tem"
     },
     "ghcr.io/devcontainers-contrib/features/clojure-asdf:2": {},
-    "ghcr.io/devcontainers/features/desktop-lite:1": {},
-    "ghcr.io/devcontainers-contrib/features/apt-get-packages:1": {
-      "ppas": ["ppa:ubuntuhandbook1/emacs"],
-      "packages": "emacs,rlwrap,fonts-hack"
+    "ghcr.io/devcontainers/features/python:1": {
+      "installJupyterlab": true
     },
-    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+      "packages": "rlwrap,make,gcc,g++"
+    },
+    "ghcr.io/rocker-org/devcontainer-features/r-apt:0": {
+      "installJupyterlab": true,
+      "installRadian": true,
+      "installMarkdown": true
+    },
     "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {},
-    "ghcr.io/rocker-org/devcontainer-features/r-apt:0": {},
     "ghcr.io/rocker-org/devcontainer-features/rstudio-server": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers-contrib/features/leiningen-sdkman:2": {},
     "ghcr.io/devcontainers-contrib/features/poetry:2": {},
     "ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
-      "packages": "Rserve",
+      "packages": "Rserve,IRkernel,shiny",
+      "installSystemRequirements": true,
       "additionalRepositories": "rforge= 'https://rforge.net'"
-  }, 
+    },
     "ghcr.io/wxw-matt/devcontainer-features/command_runner:latest": {
-            "command1": "sudo bash < <(curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install)",
-            "command2": "sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)"
-        }
+      "command1": "sudo bash < <(curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install)",
+      "command2": "sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)"
+    },
+    "ghcr.io/julialang/devcontainer-features/julia:1": {
+      "channel": "lts"
+    }
   },
   "overrideFeatureInstallOrder": [
+    "ghcr.io/devcontainers-contrib/features/leiningen-sdkman",
     "ghcr.io/devcontainers/features/python",
-    "ghcr.io/devcontainers/features/java",
     "ghcr.io/devcontainers-contrib/features/clojure-asdf",
     "ghcr.io/wxw-matt/devcontainer-features/command_runner"
   ],
-
-  "forwardPorts": [6080,12345],
+  "forwardPorts": [
+    8888,
+    8787,
+    7777,
+    12345
+  ],
   "portsAttributes": {
-    "6080": {
-      "label": "desktop"
+    "8888": {
+      "label": "jupyter"
+    },
+    "8787": {
+      "label": "rstudio"
+    },
+    "7777": {
+      "label": "NextJournal clerk"
     },
     "12345": {
       "label": "nrepl"
@@ -45,16 +65,39 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "betterthantomorrow.calva"
+        "betterthantomorrow.calva",
+        "REditorSupport.r",
+        "DavidAnson.vscode-markdownlint",
+        "eamodio.gitlens@11.7.0",
+        "editorconfig.editorconfig",
+        "mhutchie.git-graph",
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "timonwong.shellcheck",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.autopep8",
+        "julialang.language-julia",
+        "tamasfe.even-better-toml"
       ]
     }
   },
-  
-  "postStartCommand":  
-  { "ide-setup": "bash -c 'if [ -f \"/home/vscode/.setup-ide/setup-ide.sh\" ]; then /home/vscode/.setup-ide/setup-ide.sh; fi'",
-    "clojure prepare": "bash -i -c 'clj -Sthreads 1 -P'",
-    "poetry setup":  "bash -i -c 'mkdir -p .venv && poetry install'"
-
+  "postStartCommand": {
+    "poetry setup": "bash -i -c 'mkdir -p .venv && poetry install'"
+  },
+  "postAttachCommand": {
+    "setup jupyter": [
+      "bash",
+      "-i",
+      "-c",
+      "source ./.devcontainer/setup.sh"
+    ],
+    "setup rlibs": [
+      "bash",
+      "-i",
+      "-c",
+      "source ./.devcontainer/randomlibs.sh"
+    ],
+    "rstudio-start": "rserver"
   }
 }
- 
