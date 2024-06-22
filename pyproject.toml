@@ -5,3 +5,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.9"
 pandas = "2.2.2"
+numpy = "1.26.4"
+polars = "0.20.31"
+matplotlib = "3.8.2"
+seaborn = "0.13.2"
