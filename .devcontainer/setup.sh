@@ -26,8 +26,8 @@ sudo ln -s /opt/julia-1.10.0/bin/julia /usr/local/bin/julia
 julia .devcontainer/iJulia.jl
 
 ######## SET UP HY KERNEL #########
-pip3 install git+https://github.com/ekaschalk/jedhy.git
-pip3 install git+https://github.com/Calysto/calysto_hy.git
+pip3 install git+https://github.com/ekaschalk/jedhy.git --user
+pip3 install git+https://github.com/Calysto/calysto_hy.git --user
 
 # DEFECT: From this file: /usr/local/python/current/lib/python3.11/site-packages/calysto_hy/kernel.py
 # Need to Delete this line: from hy.version import __version__ as hy_version
@@ -41,6 +41,13 @@ sed -i 's/hy_version/hy.__version__/g' /home/vscode/.local/lib/python3.10/site-p
 
 ## add Hy to Jupyter Notebooks
 python3 -m calysto_hy install --user
+
+## Add APL
+#pip3 install dyalog-jupyter-kernel[2.0.1] --user
+#python3 -m 'dyalog_kernel' install --user
+
+## set up poetry 
+mkdir -p .venv && poetry install
 
 ### TODO Clean up unnecessary installation Files
 

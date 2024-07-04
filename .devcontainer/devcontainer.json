@@ -1,5 +1,5 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
   "containerUser": "vscode",
   "features": {
     "ghcr.io/devcontainers-contrib/features/leiningen-sdkman:2": {
@@ -12,7 +12,10 @@
     },
     "ghcr.io/devcontainers-contrib/features/clojure-asdf:2": {},
     "ghcr.io/devcontainers/features/python:1": {
-      "installJupyterlab": true
+      "installJupyterlab": true,
+      "version": "3.10.0",
+      "installTools": true,
+      "toolsToInstall": "poetry,flake8,autopep8,black,yapf,mypy,pydocstyle,pycodestyle,bandit,pipenv,virtualenv,pytest,pylint"
     },
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
       "packages": "rlwrap,make,gcc,g++"
@@ -85,9 +88,7 @@
       ]
     }
   },
-  "postStartCommand": {
-    "poetry setup": "bash -i -c 'mkdir -p .venv && poetry install'"
-  },
+  "postStartCommand": {},
   "postAttachCommand": {
     "setup jupyter": [
       "bash",

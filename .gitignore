@@ -7,4 +7,6 @@ classes/
 .clerk/
 .Trash*/
 .venv/
-
+julia*
+julia*/*
+.ipynb_checkpoints/*
