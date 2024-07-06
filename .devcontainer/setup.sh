@@ -25,6 +25,10 @@ sudo ln -s /opt/julia-1.10.0/bin/julia /usr/local/bin/julia
 #enable Julia in IPython
 julia .devcontainer/iJulia.jl
 
+##clean up Julia files
+rm -rf julia-*/
+rm *.tar.*
+
 ######## SET UP HY KERNEL #########
 pip3 install git+https://github.com/ekaschalk/jedhy.git --user
 pip3 install git+https://github.com/Calysto/calysto_hy.git --user
@@ -42,14 +46,11 @@ sed -i 's/hy_version/hy.__version__/g' /home/vscode/.local/lib/python3.10/site-p
 ## add Hy to Jupyter Notebooks
 python3 -m calysto_hy install --user
 
-## Add APL
-#pip3 install dyalog-jupyter-kernel[2.0.1] --user
-#python3 -m 'dyalog_kernel' install --user
-
 ## set up poetry 
+rm poetry.lock
 mkdir -p .venv && poetry install
 
 ### TODO Clean up unnecessary installation Files
 
 ## Start up Jupyter Lab
-jupyter lab --NotebookApp.token='abcde54321' --no-browser --allow-root --debug --NotebookApp.iopub_msg_rate_limit=1000000.0 --NotebookApp.iopub_data_rate_limit=100000000.0
+jupyter lab --NotebookApp.token='abcde54321' --no-browser --allow-root --debug --NotebookApp.iopub_msg_rate_limit=1000000.0 --NotebookApp.iopub_data_rate_limit=100000000.0 & 
