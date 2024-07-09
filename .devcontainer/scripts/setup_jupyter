@@ -1,0 +1,50 @@
+#!/bin/bash -xe
+
+
+## TODO: check if stuff exists vs reinstall/download it
+
+### ASSUME all of this is running from the /workspaces/scicloj directory ######
+
+# enable Julia in IPython --> This should default to Julia latest Release version
+julia /workspaces/scicloj/.devcontainer/scripts/iJulia.jl
+
+## Just for Clojure & Julia Integration install a compatible version of Julia (1.7) in addtion to the the latest release
+juliaup add 1.7.3
+#cd /home/vscode/.julia/juliaup
+# julia-1.7.3+0.x64.linux.gnu/
+
+#update vscode user .bashrc
+tee -a /home/vscode/.bashrc <<EOF
+export JULIA_HOME=/home/vscode/.julia/juliaup/julia-1.7.3+0.x64.linux.gnu
+export PATH=${JULIA_HOME}/bin:$PATH
+EOF
+
+## cd back to workspace directory
+#cd /workspaces/scicloj
+
+######## SET UP HY KERNEL #########
+pip3 install git+https://github.com/ekaschalk/jedhy.git --user
+pip3 install git+https://github.com/Calysto/calysto_hy.git --user
+
+# DEFECT: From this file: /usr/local/python/current/lib/python3.11/site-packages/calysto_hy/kernel.py
+# Need to Delete this line: from hy.version import __version__ as hy_version
+# Need to replace this text: hy_version with hy.__version__
+# If root user
+# sed -i '/from hy.version import/d'  /usr/local/python/current/lib/python3.11/site-packages/calysto_hy/kernel.py
+# sed -i 's/hy_version/hy.__version__/g' /usr/local/python/current/lib/python3.11/site-packages/calysto_hy/kernel.py
+# if vscode user  /home/vscode/.local/lib/python3.10/site-packages
+sed -i '/from hy.version import/d'  /home/vscode/.local/lib/python3.10/site-packages/calysto_hy/kernel.py
+sed -i 's/hy_version/hy.__version__/g' /home/vscode/.local/lib/python3.10/site-packages/calysto_hy/kernel.py
+
+## add Hy to Jupyter Notebooks
+python3 -m calysto_hy install --user
+
+### Setup Java Jupyter
+cd /home/vscode/
+wget https://github.com/padreati/rapaio-jupyter-kernel/releases/download/1.4.0/rapaio-jupyter-kernel-1.4.0.jar
+java -jar ./rapaio-jupyter-kernel-1.4.0.jar -i -auto
+
+cd /workspaces/scicloj
+
+## Start up Jupyter Lab
+jupyter lab --NotebookApp.token='abcde54321' --ip=0.0.0.0 --no-browser --allow-root --debug --NotebookApp.iopub_msg_rate_limit=1000000.0 --NotebookApp.iopub_data_rate_limit=100000000.0 & 

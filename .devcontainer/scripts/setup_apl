@@ -1,0 +1,24 @@
+#!/bin/bash -xe
+
+###### SETUP APL ##########
+
+## add GNU APL for testing --> This takes a long time
+cd /home/vscode
+wget https://mirrors.ibiblio.org/gnu/apl/apl-1.9.tar.gz
+gunzip apl-1.9.tar.gz
+tar -xvf apl-1.9.tar
+cd apl-1.9
+./configure --with-libapl 
+make 
+sudo make install
+cd /workspaces/scicloj
+
+if [ -f /usr/local/lib/apl/libapl.so ]; then
+  echo "APL LIB IS INSTALLED"
+fi
+
+## THIS DOES NOT SEEM TO WOKR, YET because the libapl is installed Clojure interaction works 
+if [ -f /usr/local/bin/apl ]; then
+  echo "APL BINARY IS INSTALLED"
+fi
+

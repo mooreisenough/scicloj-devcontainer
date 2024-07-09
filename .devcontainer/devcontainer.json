@@ -13,12 +13,11 @@
     "ghcr.io/devcontainers-contrib/features/clojure-asdf:2": {},
     "ghcr.io/devcontainers/features/python:1": {
       "installJupyterlab": true,
-      "version": "3.10.0",
       "installTools": true,
       "toolsToInstall": "poetry,flake8,autopep8,black,yapf,mypy,pydocstyle,pycodestyle,bandit,pipenv,virtualenv,pytest,pylint"
     },
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-      "packages": "rlwrap,make,gcc,g++"
+      "packages": "rlwrap,make,gcc,g++,libfftw3-double3,libfftw3-dev,libgtk-3-0, libpq5"
     },
     "ghcr.io/rocker-org/devcontainer-features/r-apt:0": {
       "installJupyterlab": true,
@@ -39,7 +38,7 @@
       "command2": "sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)"
     },
     "ghcr.io/julialang/devcontainer-features/julia:1": {
-      "channel": "lts"
+      "channel": "release"
     }
   },
   "overrideFeatureInstallOrder": [
@@ -52,7 +51,9 @@
     8888,
     8787,
     7777,
-    12345
+    12345,
+    12346,
+    12347
   ],
   "portsAttributes": {
     "8888": {
@@ -65,7 +66,13 @@
       "label": "NextJournal clerk"
     },
     "12345": {
-      "label": "nrepl"
+      "label": "python-r"
+    },
+    "12346": {
+      "label": "python-julia"
+    },
+    "12347": {
+      "label": "python-apl"
     }
   },
   "customizations": {
@@ -90,18 +97,24 @@
   },
   "postStartCommand": {},
   "postAttachCommand": {
-    "setup jupyter": [
+    "setup-jupyter": [
       "bash",
       "-i",
       "-c",
-      "source ./.devcontainer/setup.sh"
+      "source ./.devcontainer/scripts/setup_jupyter"
     ],
-    "setup rlibs": [
+    "setup-apl": [
       "bash",
       "-i",
       "-c",
-      "source ./.devcontainer/randomlibs.sh"
+      "source ./.devcontainer/scripts/setup_apl"
     ],
-    "rstudio-start": "rserver"
+    "rstudio-start": "rserver",
+    "finish-setup": [
+      "bash",
+      "-i",
+      "-c",
+      "source ./.devcontainer/scripts/finish_setup"
+    ],
   }
 }

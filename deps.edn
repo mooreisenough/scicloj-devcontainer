@@ -1,6 +1,7 @@
-{:paths ["src" "resources"]
- :deps {org.scicloj/noj {:mvn/version "1-alpha31"}
-        org.scicloj/clay {:mvn/version "2-beta3"}
+{:mvn/local-repo "/home/vscode/.m2"
+ :paths ["src" "resources"]
+ :deps {org.scicloj/noj {:mvn/version "1-alpha34"}
+        org.scicloj/clay {:mvn/version "2-beta11"}
         org.jcuda/jcuda             {:mvn/version "12.0.0"}
         uncomplicate/clojurecuda    {:mvn/version "0.18.0"}
         uncomplicate/clojurecl      {:mvn/version "0.15.2"}
@@ -13,22 +14,34 @@
  {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.3"}
                  slipset/deps-deploy           {:mvn/version "0.2.2"}}
           :ns-default build}
-  :test {
-         :extra-paths ["test"]
-          :extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
-          :main-opts ["-m" "cognitect.test-runner"]
-          :exec-fn cognitect.test-runner.api/test}
-  :dev {;; for disabling the official compiler
-         :classpath-overrides {org.clojure/clojure nil}
-         :extra-deps {com.github.flow-storm/clojure        {:mvn/version "RELEASE"}
-                      com.github.flow-storm/flow-storm-dbg {:mvn/version "RELEASE"}
-                      nrepl/nrepl                          {:mvn/version "1.1.1"}
-                      cider/cider-nrepl                    {:mvn/version "0.47.1"}
-                      refactor-nrepl/refactor-nrepl        {:mvn/version "3.10.0"}}
-         :jvm-opts ["-Dclojure.storm.instrumentEnable=true"
-                    "-Dclojure.storm.instrumentOnlyPrefixes=mooreisenough."]
-         :main-opts ["-m" "nrepl.cmdline"
-             "-b" "0.0.0.0"
-             "-p" "12345"
-             "--middleware" "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}}
-}
+  :test {:extra-paths ["test"]
+         :extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+         :main-opts ["-m" "cognitect.test-runner"]
+         :exec-fn cognitect.test-runner.api/test}
+  :julia {:extra-deps {cnuernber/dtype-next {:mvn/version "8.062"} ;; old but used for libjulia-clj
+                       com.cnuernber/libjulia-clj {:mvn/version "1.000-beta-9"}
+                       nrepl/nrepl                          {:mvn/version "1.1.1"}
+                       cider/cider-nrepl                    {:mvn/version "0.47.1"}
+                       refactor-nrepl/refactor-nrepl        {:mvn/version "3.10.0"}}
+          :main-opts ["-m" "nrepl.cmdline"
+                      "-b" "0.0.0.0"
+                      "-p" "12346"
+                      "--middleware" "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}
+  :apl {:extra-deps {cnuernber/dtype-next {:mvn/version "6.00-beta-20"};; old but used for APL
+                     jjtolton/libapl-clj {:mvn/version "0.1.2-ALPHA-SNAPSHOT"}
+                     techascent/tech.jna  {:mvn/version "4.06"}
+                     complex/complex      {:mvn/version "0.1.12"}
+                     nrepl/nrepl                          {:mvn/version "1.1.1"}
+                     cider/cider-nrepl                    {:mvn/version "0.47.1"}
+                     refactor-nrepl/refactor-nrepl        {:mvn/version "3.10.0"}}
+        :main-opts ["-m" "nrepl.cmdline"
+                    "-b" "0.0.0.0"
+                    "-p" "12347"
+                    "--middleware" "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}
+  :rrr {:extra-deps {nrepl/nrepl                          {:mvn/version "1.1.1"}
+                     cider/cider-nrepl                    {:mvn/version "0.47.1"}
+                     refactor-nrepl/refactor-nrepl        {:mvn/version "3.10.0"}}
+        :main-opts ["-m" "nrepl.cmdline"
+                    "-b" "0.0.0.0"
+                    "-p" "12345"
+                    "--middleware" "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}}}

@@ -12,3 +12,5 @@ julia*
 julia*/*
 .vscode/*
 .ipynb_checkpoints/*
+.apl.history
+*.jar
