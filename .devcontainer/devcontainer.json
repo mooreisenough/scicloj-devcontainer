@@ -1,6 +1,10 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/base:jammy",
-  "containerUser": "vscode",
+  "build": {
+    // Path is relative to the devcontainer.json file.
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "remoteUser": "scicloj",
   "features": {
     "ghcr.io/devcontainers-contrib/features/leiningen-sdkman:2": {
       "version": "latest",
@@ -33,19 +37,18 @@
       "installSystemRequirements": true,
       "additionalRepositories": "rforge= 'https://rforge.net'"
     },
+    "ghcr.io/julialang/devcontainer-features/julia:1": {
+      "channel": "release"
+    },
     "ghcr.io/wxw-matt/devcontainer-features/command_runner:latest": {
       "command1": "sudo bash < <(curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install)",
       "command2": "sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)"
-    },
-    "ghcr.io/julialang/devcontainer-features/julia:1": {
-      "channel": "release"
     }
   },
   "overrideFeatureInstallOrder": [
     "ghcr.io/devcontainers-contrib/features/leiningen-sdkman",
     "ghcr.io/devcontainers/features/python",
-    "ghcr.io/devcontainers-contrib/features/clojure-asdf",
-    "ghcr.io/wxw-matt/devcontainer-features/command_runner"
+    "ghcr.io/devcontainers-contrib/features/clojure-asdf"
   ],
   "forwardPorts": [
     8888,
@@ -97,24 +100,31 @@
   },
   "postStartCommand": {},
   "postAttachCommand": {
-    "setup-jupyter": [
+    "rstudio-start": "rserver",
+    "setup_jupyter": [
       "bash",
       "-i",
       "-c",
       "source ./.devcontainer/scripts/setup_jupyter"
     ],
-    "setup-apl": [
-      "bash",
-      "-i",
-      "-c",
-      "source ./.devcontainer/scripts/setup_apl"
-    ],
-    "rstudio-start": "rserver",
     "finish-setup": [
       "bash",
       "-i",
       "-c",
       "source ./.devcontainer/scripts/finish_setup"
     ],
+    "setup_apl_for_clojure": [
+      "bash",
+      "-i",
+      "-c",
+      "source ./.devcontainer/scripts/setup_apl"
+    ]
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/scicloj/workspace,type=bind",
+  "workspaceFolder": "/home/scicloj/workspace",
+  "hostRequirements": {
+    "cpus": 8,
+    "memory": "8gb",
+    "storage": "32gb"
   }
 }

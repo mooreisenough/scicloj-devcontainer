@@ -1,9 +1,23 @@
 #!/bin/bash -xe
 
+
+###### SETUP R   ##########
+## Make updates for Java & R
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+## install some Java Deps
+sudo apt-get install -y libxi6 
+sudo apt-get install -y libxtst6
+
+## install cool Rlibs that did not work using devcontainer features
+sudo apt-get install -y r-cran-crayon r-cran-e1071 r-cran-forecast r-cran-hexbin r-cran-htmltools r-cran-htmlwidgets r-cran-randomforest r-cran-rcurl r-cran-rmarkdown r-cran-rodbc r-cran-rsqlite 
+sudo apt-get install -y r-cran-tidyverse r-cran-tidymodels r-cran-nycflights23
+
 ###### SETUP APL ##########
 
 ## add GNU APL for testing --> This takes a long time
-cd /home/vscode
+cd /home/scicloj
 wget https://mirrors.ibiblio.org/gnu/apl/apl-1.9.tar.gz
 gunzip apl-1.9.tar.gz
 tar -xvf apl-1.9.tar
@@ -11,7 +25,6 @@ cd apl-1.9
 ./configure --with-libapl 
 make 
 sudo make install
-cd /workspaces/scicloj
 
 if [ -f /usr/local/lib/apl/libapl.so ]; then
   echo "APL LIB IS INSTALLED"
@@ -22,3 +35,4 @@ if [ -f /usr/local/bin/apl ]; then
   echo "APL BINARY IS INSTALLED"
 fi
 
+clj -M:apl &

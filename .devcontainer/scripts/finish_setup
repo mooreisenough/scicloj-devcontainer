@@ -1,24 +1,15 @@
 #!/bin/bash -xe
 
-## Make updates for Java & R
-sudo apt-get update -y
-sudo apt-get upgrade -y
-
-## install some Java Deps
-sudo apt-get install -y libxi6 
-sudo apt-get install -y libxtst6
-
-## install cool Rlibs that did not work using devcontainer features
-sudo apt-get install -y r-cran-crayon r-cran-e1071 r-cran-forecast r-cran-hexbin r-cran-htmltools r-cran-htmlwidgets r-cran-randomforest r-cran-rcurl r-cran-rmarkdown r-cran-rodbc r-cran-rsqlite 
-sudo apt-get install -y r-cran-tidyverse r-cran-tidymodels r-cran-nycflights23
+### run APL setup for RIDE IDE
+/entrypoint
 
 ## Setup Clojure Dependencies and limit threads to avoid write lock error
 clj -Sthreads 1 -P
 
 ## set up poetry 
 rm poetry.lock
+
 mkdir -p .venv && poetry install
 
-cjl -M:apl &
 clj -M:julia &
 clj -M:rrr &
