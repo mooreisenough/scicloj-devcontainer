@@ -4,7 +4,7 @@
     "dockerfile": "../Dockerfile",
     "context": ".."
   },
-  "remoteUser": "scicloj",
+  "containerUser": "scicloj",
   "features": {
     "ghcr.io/devcontainers-contrib/features/leiningen-sdkman:2": {
       "version": "latest",
@@ -14,7 +14,6 @@
     "ghcr.io/devcontainers/features/nvidia-cuda:1": {
       "installCudnn": true
     },
-    "ghcr.io/devcontainers-contrib/features/clojure-asdf:2": {},
     "ghcr.io/devcontainers/features/python:1": {
       "installJupyterlab": true,
       "installTools": true,
@@ -30,7 +29,6 @@
     },
     "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {},
     "ghcr.io/rocker-org/devcontainer-features/rstudio-server": {},
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers-contrib/features/poetry:2": {},
     "ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
       "packages": "Rserve,IRkernel,shiny",
@@ -52,6 +50,7 @@
   ],
   "forwardPorts": [
     8888,
+    8899,
     8787,
     7777,
     12345,
@@ -61,6 +60,9 @@
   "portsAttributes": {
     "8888": {
       "label": "jupyter"
+    },
+    "8899": {
+      "label": "apl_ride"
     },
     "8787": {
       "label": "rstudio"
@@ -113,11 +115,11 @@
       "-c",
       "source ./.devcontainer/scripts/finish_setup"
     ],
-    "setup_apl_for_clojure": [
+    "setup_apl_ride": [
       "bash",
       "-i",
       "-c",
-      "source ./.devcontainer/scripts/setup_apl"
+      "source ./entrypoint"
     ]
   },
   "workspaceMount": "source=${localWorkspaceFolder},target=/home/scicloj/workspace,type=bind",

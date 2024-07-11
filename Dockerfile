@@ -14,11 +14,13 @@ RUN dpkg -i --ignore-depends=libtinfo5 /tmp/dyalog.deb && /rmfiles.sh
 
 FROM mcr.microsoft.com/devcontainers/base:jammy
 
+## DEFAULT user is vscode GUI=1000; Create a user for scicloj
 ARG DYALOG_RELEASE=19.0
 ARG USERNAME=scicloj
 ARG USER_UID=1010
 ARG USER_GID=$USER_UID
 
+## Setup Base Docker container configuration
 RUN apt-get update && apt-get install -y --no-install-recommends locales && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*             && \
     sed -i -e 's/# en_GB.UTF-8 UTF-8/en_GB.UTF-8 UTF-8/' /etc/locale.gen    && \
@@ -33,11 +35,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends libncurses5 && 
 
 COPY --from=0 /opt /opt
 
+## Setup Dyalog APL Latest version
 RUN P=$(echo ${DYALOG_RELEASE} | sed 's/\.//g') && update-alternatives --install /usr/bin/dyalog dyalog /opt/mdyalog/${DYALOG_RELEASE}/64/unicode/dyalog ${P}
 RUN P=$(echo ${DYALOG_RELEASE} | sed 's/\.//g') && update-alternatives --install /usr/bin/dyalogscript dyalogscript /opt/mdyalog/${DYALOG_RELEASE}/64/unicode/scriptbin/dyalogscript ${P}
 RUN cp /opt/mdyalog/${DYALOG_RELEASE}/64/unicode/LICENSE /LICENSE
 
-ADD entrypoint /
+COPY entrypoint /entrypoint
+
 RUN sed -i "s/{{DYALOG_RELEASE}}/${DYALOG_RELEASE}/" /entrypoint
 
 RUN mkdir /app /storage && \
@@ -46,7 +50,10 @@ RUN mkdir /app /storage && \
 LABEL org.label-schema.licence="proprietary / non-commercial"   \   
       org.label-schema.licenceURL="https://www.dyalog.com/uploads/documents/Private_Personal_Educational_Licence.pdf"
 
-# Create the user
+ENV RIDE_INIT=http:*:8899
+### END Dyalog APL setup
+
+# Create scicloj user
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash -d /home/scicloj \
     #
@@ -58,9 +65,18 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 # ********************************************************
 # * Anything else you want to do like clean up goes here *
-# ********************************************************
+# ********************************************************## Setup GNU APL for Clojure Integration
 
-ENV RIDE_INIT=http:*:8899
+## Now that we have a scicloj user, setup GNU APL and add some Java/R Dependencies
+WORKDIR /home/scicloj/scripts
+COPY ./setup_apl setup_apl
+RUN chmod +x setup_apl \
+    && ./setup_apl 
+
+## Install Clojure
+RUN curl -L -O https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh \
+    && chmod +x linux-install.sh \
+    && ./linux-install.sh 
 
 USER $USERNAME
 WORKDIR /home/scicloj

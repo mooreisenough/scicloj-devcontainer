@@ -1,15 +1,12 @@
 #!/bin/bash -xe
 
-### run APL setup for RIDE IDE
-/entrypoint
-
 ## Setup Clojure Dependencies and limit threads to avoid write lock error
 clj -Sthreads 1 -P
 
-## set up poetry 
-rm poetry.lock
-
+## Set Up Python Dependencies
 mkdir -p .venv && poetry install
 
+## Start Clojure REPLs
 clj -M:julia &
 clj -M:rrr &
+clj -M:apl &

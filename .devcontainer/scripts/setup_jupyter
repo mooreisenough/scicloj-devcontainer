@@ -1,5 +1,6 @@
 #!/bin/bash -xe
 
+## Run this file after the container and features are enabled
 
 ## TODO: check if stuff exists vs reinstall/download it
 cd /home/scicloj

@@ -12,12 +12,12 @@ sudo apt-get install -y libxtst6
 
 ## install cool Rlibs that did not work using devcontainer features
 sudo apt-get install -y r-cran-crayon r-cran-e1071 r-cran-forecast r-cran-hexbin r-cran-htmltools r-cran-htmlwidgets r-cran-randomforest r-cran-rcurl r-cran-rmarkdown r-cran-rodbc r-cran-rsqlite 
-sudo apt-get install -y r-cran-tidyverse r-cran-tidymodels r-cran-nycflights23
+sudo apt-get install -y r-cran-tidyverse 
+#r-cran-tidymodels r-cran-nycflights23
 
 ###### SETUP APL ##########
 
 ## add GNU APL for testing --> This takes a long time
-cd /home/scicloj
 wget https://mirrors.ibiblio.org/gnu/apl/apl-1.9.tar.gz
 gunzip apl-1.9.tar.gz
 tar -xvf apl-1.9.tar
@@ -29,10 +29,3 @@ sudo make install
 if [ -f /usr/local/lib/apl/libapl.so ]; then
   echo "APL LIB IS INSTALLED"
 fi
-
-## THIS DOES NOT SEEM TO WOKR, YET because the libapl is installed Clojure interaction works 
-if [ -f /usr/local/bin/apl ]; then
-  echo "APL BINARY IS INSTALLED"
-fi
-
-clj -M:apl &
