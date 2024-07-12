@@ -9,12 +9,6 @@ julia /home/vscode/workspace/.devcontainer/scripts/iJulia.jl
 ## Just for Clojure & Julia Integration install a compatible version of Julia (1.7) in addtion to the the latest release
 juliaup add 1.7.3
 
-#update vscode user .bashrc
-tee -a /home/vscode/.bashrc <<EOF
-export JULIA_HOME=/home/vscode/.julia/juliaup/julia-1.7.3+0.x64.linux.gnu
-export PATH=${JULIA_HOME}/bin:$PATH
-EOF
-
 ######## SET UP HY KERNEL #########
 pip3 install git+https://github.com/ekaschalk/jedhy.git --user
 pip3 install git+https://github.com/Calysto/calysto_hy.git --user

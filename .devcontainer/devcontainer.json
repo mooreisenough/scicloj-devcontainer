@@ -68,16 +68,16 @@
       "label": "rstudio"
     },
     "7777": {
-      "label": "NextJournal clerk"
+      "label": "clerk"
     },
     "12345": {
-      "label": "python-r"
+      "label": "clj-r"
     },
     "12346": {
-      "label": "python-julia"
+      "label": "clj-julia"
     },
     "12347": {
-      "label": "python-apl"
+      "label": "clj-apl"
     }
   },
   "customizations": {
@@ -126,7 +126,7 @@
   "workspaceFolder": "/home/vscode/workspace",
   "hostRequirements": {
     "cpus": 8,
-    "memory": "7gb",
+    "memory": "8gb",
     "storage": "32gb"
   }
 }
