@@ -4,7 +4,7 @@
     "dockerfile": "../Dockerfile",
     "context": ".."
   },
-  "containerUser": "scicloj",
+  "containerUser": "vscode",
   "features": {
     "ghcr.io/devcontainers-contrib/features/leiningen-sdkman:2": {
       "version": "latest",
@@ -119,14 +119,14 @@
       "bash",
       "-i",
       "-c",
-      "source ./entrypoint"
+      "source /entrypoint"
     ]
   },
-  "workspaceMount": "source=${localWorkspaceFolder},target=/home/scicloj/workspace,type=bind",
-  "workspaceFolder": "/home/scicloj/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/workspace,type=bind",
+  "workspaceFolder": "/home/vscode/workspace",
   "hostRequirements": {
     "cpus": 8,
-    "memory": "8gb",
+    "memory": "7gb",
     "storage": "32gb"
   }
 }
