@@ -1,6 +1,7 @@
 #!/bin/bash -xe
 
 ## Setup Clojure Dependencies and limit threads to avoid write lock error
+cd /home/vscode/workspace
 clj -Sthreads 1 -P
 
 ## Set Up Python Dependencies
