@@ -2,9 +2,15 @@
 .cpcache/
 classes/
 .lsp/
+.Trash-1000
 .calva
 .nrepl-port
 .clerk/
 .Trash*/
 .venv/
-
+julia*
+julia*/*
+.vscode/*
+.ipynb_checkpoints/*
+.apl.history
+*.jar
