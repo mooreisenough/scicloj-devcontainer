@@ -30,6 +30,12 @@ python3 -m calysto_hy install --user
 wget https://github.com/padreati/rapaio-jupyter-kernel/releases/download/1.4.0/rapaio-jupyter-kernel-1.4.0.jar
 java -jar ./rapaio-jupyter-kernel-1.4.0.jar -i -auto
 
+### Setup Clojupyter and install Kernel
+git clone https://github.com/clojupyter/clojupyter
+cd clojupyter
+make install
+cd ..
+
 ## install and modify dyalog kernel
 pip install dyalog-jupyter-kernel[2.0.2] --user
 python -m 'dyalog_kernel' install --user
