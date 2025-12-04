@@ -1,59 +1,92 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-## This file replaces the Dyalog mapl script
-echo " _______     __      _      ____   _____ "
-echo "|  __ \ \   / //\   | |    / __ \ / ____|"
-echo "|_|  | \ \_/ //  \  | |   | |  | | |     "
-echo "     | |\   // /\ \ | |   | |  | | |   _ "
-echo " ____| | | |/ /  \ \| |___| |__| | |__| |"
-echo "|_____/  |_/_/    \_\______\____/ \_____|"
-echo ""
-echo "https://www.dyalog.com"
-echo ""
+## Hardened entrypoint for Dyalog runtime
+printf "\nStarting scicloj Dyalog entrypoint\n" >&2
 
-export DYALOG=/opt/mdyalog/{{DYALOG_RELEASE}}/64/unicode/
-export LD_LIBRARY_PATH="${DYALOG}:${LD_LIBRARY_PATH}"
-export WSPATH=$WSPATH:${DYALOG}/ws
-export TERM=dumb
-export APL_TEXTINAPLCORE=${APL_TEXTINAPLCORE-1}
-export TRACE_ON_ERROR=0
-export SESSION_FILE="${SESSION_FILE-$DYALOG/default.dse}"
+# ASCII banner (kept for familiarity)
+cat <<'BANNER' >&2
+ _______     __      _      ____   _____ 
+|  __ \\ \   / //\   | |    / __ \\ / ____|
+|_|  | \\ \_/ //  \  | |   | |  | | |     
+         | |\   // /\ \ | |   | |  | | |   _ 
+ ____| | | |/ /  \ \| |___| |__| | |__| |
+|_____/  |_/ _/    \_\______\\____/ \_____|
 
-if    [ "x${LOAD}" = "x" ] \
-   && [ "x${CONFIGFILE}" = "x" ] \
-   && [ "x${DYAPP}" = "x" ]; then
+https://www.dyalog.com
+BANNER
 
-    if [ $(ls /app/*.dcfg 2>/dev/null | wc -l) = 1 ]; then
-        export CONFIGFILE=$(ls /app/*.dcfg)
-        echo "found config file Launching with CONFIGFILE=$CONFIGFILE"
-    elif [ $(ls /app/*.aplf 2>/dev/null | wc -l) = 1 ]; then
-        export LOAD=$(ls /app/*.aplf)
-        echo "found aplf file Launching with LOAD=$LOAD"
-    elif [ $(ls /app/*.apln 2>/dev/null | wc -l) = 1 ]; then
-        export LOAD=$(ls /app/*.apln)
-        echo "found apln file Launching with LOAD=$LOAD"
-    elif [ $(ls /app/*.aplc 2>/dev/null | wc -l) = 1 ]; then
-        export LOAD=$(ls /app/*.aplc)
-        echo "found aplc file Launching with LOAD=$LOAD"
-    elif [ $(ls /app/*.dyapp 2>/dev/null | wc -l) = 1 ]; then
-        export DYAPP=$(ls /app/*.dyapp)
-        echo "found dyapp file Launching with DYAPP=$DYAPP"
-    elif [ $(ls /app/*.dws 2>/dev/null | wc -l) = 1 ]; then
-        WS=$(ls /app/*.dws)
-        echo "found dws file Launching with $WS"
-    elif [ $(ls /app/*.dyapp 2>/dev/null | wc -l) -gt 1 ]; then
-        echo "found too many dyapp files Starting Dyalog with CLEAR WS"
-    elif [ $(ls /app/*.dws 2>/dev/null | wc -l) -gt 1 ]; then
-        echo "found too many dws files Starting Dyalog with CLEAR WS"
+# Dyalog installation root (template replaced by Dockerfile)
+DYALOG="/opt/mdyalog/{{DYALOG_RELEASE}}/64/unicode"
+
+if [ ! -d "$DYALOG" ]; then
+    printf "Dyalog directory not found: %s\n" "$DYALOG" >&2
+    exit 1
+fi
+
+export DYALOG
+export LD_LIBRARY_PATH="${DYALOG}:${LD_LIBRARY_PATH:-}"
+export WSPATH="${WSPATH:-}"        # will append WS entries below if needed
+export TERM="${TERM:-dumb}"
+export APL_TEXTINAPLCORE="${APL_TEXTINAPLCORE:-1}"
+export TRACE_ON_ERROR="${TRACE_ON_ERROR:-0}"
+export SESSION_FILE="${SESSION_FILE:-$DYALOG/default.dse}"
+
+# Use nullglob so globs that match nothing expand to empty list
+shopt -s nullglob
+
+# Only try to auto-detect files if user has not provided LOAD/CONFIGFILE/DYAPP
+if [ -z "${LOAD:-}" ] && [ -z "${CONFIGFILE:-}" ] && [ -z "${DYAPP:-}" ]; then
+    dcfg=(/app/*.dcfg)
+    aplf=(/app/*.aplf)
+    apln=(/app/*.apln)
+    aplc=(/app/*.aplc)
+    dyapp=(/app/*.dyapp)
+    dws=(/app/*.dws)
+
+    if [ ${#dcfg[@]} -eq 1 ]; then
+        CONFIGFILE="${dcfg[0]}"
+        printf "found config file; launching with CONFIGFILE=%s\n" "$CONFIGFILE" >&2
+        export CONFIGFILE
+    elif [ ${#aplf[@]} -eq 1 ]; then
+        LOAD="${aplf[0]}"
+        printf "found .aplf; launching with LOAD=%s\n" "$LOAD" >&2
+        export LOAD
+    elif [ ${#apln[@]} -eq 1 ]; then
+        LOAD="${apln[0]}"
+        printf "found .apln; launching with LOAD=%s\n" "$LOAD" >&2
+        export LOAD
+    elif [ ${#aplc[@]} -eq 1 ]; then
+        LOAD="${aplc[0]}"
+        printf "found .aplc; launching with LOAD=%s\n" "$LOAD" >&2
+        export LOAD
+    elif [ ${#dyapp[@]} -eq 1 ]; then
+        DYAPP="${dyapp[0]}"
+        printf "found .dyapp; launching with DYAPP=%s\n" "$DYAPP" >&2
+        export DYAPP
+    elif [ ${#dws[@]} -eq 1 ]; then
+        WS="${dws[0]}"
+        printf "found .dws; launching with WS=%s\n" "$WS" >&2
+        export WS
+    elif [ ${#dyapp[@]} -gt 1 ]; then
+        printf "found multiple .dyapp files; starting Dyalog with CLEAR WS\n" >&2
+    elif [ ${#dws[@]} -gt 1 ]; then
+        printf "found multiple .dws files; starting Dyalog with CLEAR WS\n" >&2
     else
-        echo "nothing to load in /app Starting with CLEAR WS"
+        printf "nothing to load in /app; starting with CLEAR WS\n" >&2
     fi
-else 
-    echo "LOAD, CONFIGFILE or DYAPP was set, not loading any defaults"
+else
+    printf "LOAD, CONFIGFILE or DYAPP provided externally; not auto-detecting defaults\n" >&2
 fi
 
-if [ -n "${RIDE_INIT}" ]; then
-    $DYALOG/dyalog +s -q ${WS} $@
+# Append Dyalog workspaces to WSPATH
+WSPATH="${WSPATH:+$WSPATH:}$DYALOG/ws"
+export WSPATH
+
+# Execute Dyalog as PID 1 (replace shell). Quote args safely.
+if [ -n "${RIDE_INIT:-}" ]; then
+    exec "$DYALOG/dyalog" +s -q ${WS:+"$WS"} "$@"
 else
-    $DYALOG/dyalog -s ${WS} $@
+    exec "$DYALOG/dyalog" -s ${WS:+"$WS"} "$@"
 fi
+

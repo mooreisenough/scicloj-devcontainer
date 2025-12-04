@@ -6,15 +6,11 @@
   },
   "containerUser": "vscode",
   "features": {
-    "ghcr.io/devcontainers-contrib/features/leiningen-sdkman:2": {
-      "version": "latest",
-      "jdkVersion": "22",
-      "jdkDistro": "tem"
-    },
-    "ghcr.io/devcontainers/features/nvidia-cuda:1": {
-      "installCudnn": true
+    "ghcr.io/devcontainers-extra/features/leiningen-sdkman:2": {
+      "jdkVersion": "25.0.1-tem"
     },
     "ghcr.io/devcontainers/features/python:1": {
+      "version": "latest",
       "installJupyterlab": true,
       "installTools": true,
       "toolsToInstall": "poetry,flake8,autopep8,black,yapf,mypy,pydocstyle,pycodestyle,bandit,pipenv,virtualenv,pytest,pylint"
@@ -29,7 +25,7 @@
     },
     "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {},
     "ghcr.io/rocker-org/devcontainer-features/rstudio-server": {},
-    "ghcr.io/devcontainers-contrib/features/poetry:2": {},
+    "ghcr.io/devcontainers-extra/features/poetry:2": {},
     "ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
       "packages": "Rserve,IRkernel,shiny",
       "installSystemRequirements": true,

@@ -16,16 +16,15 @@ sudo apt-get install -y r-cran-tidyverse
 #r-cran-tidymodels r-cran-nycflights23
 
 ###### SETUP APL ##########
-
 ## add GNU APL for testing --> This takes a long time
-wget https://mirrors.ibiblio.org/gnu/apl/apl-1.9.tar.gz
-gunzip apl-1.9.tar.gz
-tar -xvf apl-1.9.tar
-cd apl-1.9
-./configure --with-libapl 
-make 
-sudo make install
+# wget https://mirrors.ibiblio.org/gnu/apl/apl-1.9.tar.gz
+# gunzip apl-1.9.tar.gz
+# tar -xvf apl-1.9.tar
+# cd apl-1.9
+# ./configure --with-libapl 
+# make 
+# sudo make install
 
-if [ -f /usr/local/lib/apl/libapl.so ]; then
-  echo "APL LIB IS INSTALLED"
-fi
+# if [ -f /usr/local/lib/apl/libapl.so ]; then
+#   echo "APL LIB IS INSTALLED"
+# fi
